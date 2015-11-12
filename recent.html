@@ -1,0 +1,46 @@
+<?php
+include_once("config.php");
+include_once("function-library.php");
+
+$ptitle   = "Free Image Hosting";
+$pkeys    = "image hosting, free image host, image host, img host, upload picture";
+$pdesc    = "Fast & Free Image Hosting";
+$selected = "RECENT";
+
+include("header.php");
+?>
+
+<table width="100%" cellpadding="10" cellspacing="0"><tr><td valign="top">
+
+Listed below are the 30 most recent public uploads to <?php echo $site_name; ?>:<br><br>
+
+<?php
+// get recent
+$tracker = 0;
+$get_recent = @mysql_query("SELECT id, dateadded, filesize, originalheight, originalwidth, originalfilename FROM images WHERE status = 'public' ORDER BY dateadded DESC LIMIT 30");
+if($get_recent) {
+  if(mysql_numrows($get_recent) > 0) {
+    echo '<table width="100%" cellpadding="3" cellspacing="0">';
+    while($row = mysql_fetch_array($get_recent)) {
+	  if($tracker == 0) echo "<tr>";
+	  echo "<td valign='top' align='center'>";
+	  echo "<a href='http://".$site_url."/showpic-".$row[id]."/".createhtmlname($row[originalfilename])."''><img src='http://".$site_url."/thumb-".$row[id].".jpg' border='0' width='110' alt='".$site_url." - click here to view this image' style='border:1px solid #cccccc;'><br>view image</a>";
+	  echo "</td>";
+	  if($tracker == 4) {
+	    $tracker = 0;
+		echo "</tr>";
+	  }
+	  else $tracker++;
+	}
+	echo '</table>';
+  }
+  else echo "<b>There are no recent public uploads, please try again later.</b>";
+}
+else echo "<b>There are no recent public uploads, please try again later.</b>";
+
+?>
+
+</td></tr></table>
+<?php
+include("footer.php");
+?>

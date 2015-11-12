@@ -1,0 +1,33 @@
+<?php
+include_once("config.php");
+include_once("function-library.php");
+
+if($permit_hotlinking == FALSE) {
+	$referer = strtolower(trim($_SERVER['HTTP_REFERER']));
+	$actual_ref_exp = explode("/", $referer);
+	$referer        = "http://".$actual_ref_exp[2];
+	$actual_site_exp = explode("/", $site_url);
+	$actual_site     = $actual_site_exp[0];
+	if(($referer != "http://www.".$actual_site) && ($referer != "http://".$actual_site)) {
+	  die("<b>ERROR:</b> You are not permitted to directly hotlink this image, please go to <a href='http://www.".$site_url."/view-pic.html?img=".$img."'>http://www.".$site_url."/view-pic.html?img=".$img."</a> to view the image.");
+	  exit;
+	}
+	else $show_page = TRUE;
+}
+else $show_page = TRUE;
+
+if($show_page == TRUE) {
+	include_once("gallery_img_handler.php");
+	if(!$img) die();
+	else {
+	  if($w > 1000) $w = 1000;
+
+	  if($w) $image = previewImage($img, $w);
+	  else $image = previewImage($img);
+	  
+	  header("Content-type: image/jpg");
+	  $done = file_get_contents($image['targetImagePath']);
+	  echo $done;
+	}
+}
+?>

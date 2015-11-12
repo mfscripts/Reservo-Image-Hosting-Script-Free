@@ -1,0 +1,78 @@
+<?php
+include_once("config.php");
+include_once("function-library.php");
+
+$ptitle   = "Free Image Hosting @ ".$site_name;
+$pkeys    = "image site, image hosting, free image host, image host, img host, upload picture, adult image hosting";
+$pdesc    = "Fast & Free Image Hosting for everyone. 3 step upload and simple instructions for uploading your images.";
+$selected = "HOME";
+
+include_once("header.php");
+?>
+
+<SCRIPT LANGUAGE="JavaScript">
+function copyit(theField) {
+	var tempval=eval("document."+theField)
+	tempval.focus()
+	tempval.select()
+	therange=tempval.createTextRange()
+	therange.execCommand("Copy")
+}
+function UploadComplete(tracker) {
+	window.location = "index-multi-result.html?mutracker="+tracker;
+}
+</script>
+
+<table width="100%" cellpadding="0" cellspacing="0">
+<tr>
+<td width="70%" valign="top" style="padding:10px;">
+
+Use the form below to upload multiple images to <?php echo $site_url; ?>. At least Flash 9 is required to view the upload tool. Please note the following before uploading:<br><br>
+<ul>
+<li><b>File Types:</b> jpg, gif, png.
+<li><b>Max File Size:</b> <?php echo $max_upload_display_size; ?>.
+<li><b>No</b> copyrighted images/artwork.
+<li>By uploading you are agreeing to the Terms of Service.
+</ul><br style="line-height: 6px;">
+<table width="100%" cellpadding="10" cellspacing="0" style="border:1px solid #CCCCCC;">
+<form method="POST" action="process-multi-upload.php" enctype='multipart/form-data'>
+<tr>
+<td width="100%" valign="top" bgcolor="#EAEAEA">
+
+<?php
+$tracker = MD5(strtotime("now").rand(1111111, 99999999));
+?>
+
+<object classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000"
+ codebase="http://fpdownload.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=9,0,0,0"
+ width="440" height="100" id="fileUpload" align="middle">
+	<param name="allowScriptAccess" value="sameDomain" />
+	<param name="movie" value="fileUpload.swf?r=<?php echo rand(11111, 99999999); ?>" />
+	<param name="quality" value="high" />
+	<param name="wmode" value="transparent">
+	<param name="FlashVars" value="uploadPage=process-multi-upload.php?mutracker=<?php echo $tracker; ?>&completeFunction=UploadComplete('<?php echo $tracker; ?>')">
+	<embed src="fileUpload.swf?r=<?php echo rand(11111, 99999999); ?>"
+	 FlashVars="uploadPage=process-multi-upload.php?mutracker=<?php echo $tracker; ?>&completeFunction=UploadComplete('<?php echo $tracker; ?>')"
+	 quality="high" wmode="transparent" width="440" height="100" 
+	 name="fileUpload" align="middle" allowScriptAccess="sameDomain" 
+	 type="application/x-shockwave-flash" 
+	 pluginspage="http://www.macromedia.com/go/getflashplayer" />
+</object>
+
+<input name="submitme" type="hidden" value="1">
+</td>
+</tr>
+</form>
+</table>
+
+</td>
+<td width="30%" valign="top" align="right">
+<img src="images/main-bg.jpg" alt="free image hosting site" width="261" height="326">
+
+</td>
+</tr>
+</table>
+
+<?php
+include("footer.php");
+?>

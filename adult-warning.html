@@ -1,0 +1,33 @@
+<?php
+include_once("config.php");
+include_once("function-library.php");
+
+$ptitle   = "Free Image Hosting";
+$pkeys    = "image hosting, free image host, image host, img host, upload picture";
+$pdesc    = "Fast & Free Image Hosting";
+$selected = "WARNING";
+
+include("header.php");
+?>
+
+<table width="100%" cellpadding="10" cellspacing="0"><tr><td valign="top" align="center">
+
+<br><br><font style="font-size:22px; color:red;"><b>CONTENT WARNING:</b></font><br><br><br>
+
+You are about to view content which may be of an adult nature<br>
+and hence you must be over the legal age for your country<br>
+before you proceed.<br><br>
+Please confirm below that you are permitted to view adult content<br>
+and you wish to continue.<br><br><br>
+<form method="POST" action="view-pic.html?img=<?php echo $img; ?>">
+<input type="hidden" name="img" value="<?php echo $img; ?>">
+<input type="hidden" name="adult" value="yes">
+<input type="submit" name="submit" value="continue" style="border:2px solid green;">&nbsp;&nbsp;&nbsp;
+<input type="reset" name="reset" value="no thanks" style="border:2px solid red;" onClick="javascript:window.location='http://<?php echo $site_url; ?>';">
+</form>
+
+</td></tr></table>
+
+<?php
+include("footer.php");
+?>

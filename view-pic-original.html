@@ -1,0 +1,57 @@
+<?php
+include_once("config.php");
+include_once("function-library.php");
+include_once("gallery_img_handler.php");
+
+//local func
+function createhtmlname($name) {
+  // remove extension first
+  $replace_values = array(" ", "'", "\"", "\\", "/", "?", "|", "@", "#", "~", "!", "£", "$", "%", "^", "&", "*", "(", ")", "[", "]", "{", "}", "+", "=", "-");
+  $name = str_replace($replace_values, "_", $name);
+  $name = str_replace(",", "", $name);
+  return strtolower($name);
+}
+
+if(!$img) die();
+else {
+	// update views
+	$get_views    = mysql_query("SELECT totalviews FROM images WHERE id = ".mysql_real_escape_string($img)." LIMIT 1");
+	if(mysql_result($get_views, 0, totalviews) > 0) {
+	  $newviews = mysql_result($get_views, 0, totalviews)+1;
+	  $update_views = mysql_query("UPDATE images SET totalviews = ".$newviews.", lastaccessed = NOW() WHERE id = ".mysql_real_escape_string($img)." LIMIT 1");
+	}
+	
+	if($permit_hotlinking == FALSE) {
+		$referer = strtolower(trim($_SERVER['HTTP_REFERER']));
+		$actual_ref_exp = explode("/", $referer);
+		$referer        = "http://".$actual_ref_exp[2];
+		$actual_site_exp = explode("/", $site_url);
+	    $actual_site     = $actual_site_exp[0];
+		if(($referer != "http://www.".$actual_site) && ($referer != "http://".$actual_site)) {
+		  if(strlen($referer) == 0) $url = "none";
+		  else $url = $referer;
+		  $done = file_get_contents("images/no-hotlinking.gif");
+		  header("Content-type: image/gif");
+		  echo $done;
+		  die();
+		  exit;
+		}
+		else $show_page = TRUE;
+	}
+	else $show_page = TRUE;
+	
+	if($show_page == TRUE) {
+	  $image = previewImage($img);
+	  $done = file_get_contents($image['targetImagePath']);
+	  header("Content-type: ".$image['mime_type']);
+	  if($_GET['dl']) {
+		header("Expires: 0");
+		header("Cache-Control: must-revalidate, post-check=0, pre-check=0"); 
+		header("Pragma: public");
+		header("Content-Disposition: attachment; filename=\"".createhtmlname($image['originalfilename'])."\"");
+		header("Content-Description: File Transfer");
+	  }
+	  echo $done;
+	}
+}
+?>

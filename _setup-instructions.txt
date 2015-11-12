@@ -1,0 +1,17 @@
+Setup Instructions:
+
+- Upload the main zip file to your hosting area.
+- Unzip the zip file ensuring all folders are kept.
+- Amend config.php with your sitename, siteurl and siteemail along with other optional amendments.
+- Modify the permissions on the following:
+  storage                         => CHMOD 777
+  storage/originals               => CHMOD 777
+  logs              		  => CHMOD 777
+- Create a new database in mysql.
+- Import the .sql file stored within the sql directory.
+- Update db_connect.php in the root to connect correctly to your mysql database.
+- Add a http username/password to the admin directory.
+
+You should now be set to go!
+
+NOTE: If you receiving an 'Internal Server Error' when you try and load the site, it's probably because you have phpsuexec installed. You can resolve this error by removing the line 'php_flag register_globals on' from the .htaccess file within the root.

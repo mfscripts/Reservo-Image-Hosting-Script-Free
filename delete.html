@@ -1,0 +1,38 @@
+<?php
+include_once("config.php");
+include_once("function-library.php");
+
+$ptitle   = "Free Image Hosting";
+$pkeys    = "image hosting, free image host, image host, img host, upload picture";
+$pdesc    = "Fast & Free Image Hosting";
+
+include("header.php");
+?>
+
+<table width="100%" cellpadding="10" cellspacing="0"><tr><td valign="top">
+
+<?php
+// delete image
+$d = $_GET['d'];
+$get_filename = mysql_query("SELECT filename FROM images WHERE tracker = '".preparedata($d)."' LIMIT 1");
+$filename     = mysql_result($get_filename, 0, filename);
+$uploaddir    = 'storage/originals/';
+
+$delete = mysql_query("DELETE FROM images WHERE tracker = '".preparedata($d)."' LIMIT 1");
+if($delete) {
+  @unlink($uploaddir.$filename);
+  @unlink($uploaddir."110/".$filename);
+  @unlink($uploaddir."160/".$filename);
+  @unlink($uploaddir."500/".$filename);
+  @unlink($uploaddir."720/".$filename);
+  @unlink($uploaddir."5000/".$filename);
+  echo "<b>Your image has successfully been removed.</b><br><br>";
+}
+else echo "<b>There has been an error looking up the image details, please try again later.</b><br><br>";
+echo "<a href='index.html'>home</a><br><br>";
+?>
+
+</td></tr></table>
+<?php
+include("footer.php");
+?>

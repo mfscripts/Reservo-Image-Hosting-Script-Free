@@ -1,0 +1,74 @@
+<?php
+include_once("../config.php");
+include_once("../function-library.php");
+
+$ptitle   = "Free Image Hosting";
+$pkeys    = "image hosting, free image host, image host, img host, upload picture";
+$pdesc    = "Fast & Free Image Hosting";
+$selected = "ADMINAPPROVE";
+
+include("../header.php");
+
+if($_GET['yespub']) {
+  $update = mysql_query("UPDATE images SET status = 'public' WHERE id = ".$_GET['yespub']." LIMIT 1");
+}
+elseif($_GET['yespri']) {
+  $update = mysql_query("UPDATE images SET status = 'private' WHERE id = ".$_GET['yespri']." LIMIT 1");
+}
+elseif($_GET['yesadult']) {
+  $update = mysql_query("UPDATE images SET status = 'adult' WHERE id = ".$_GET['yesadult']." LIMIT 1");
+}
+elseif($_GET['no']) {
+  // remove image info
+  $get_info = mysql_query("SELECT filename FROM images WHERE id = ".$_GET['no']." LIMIT 1");
+  $filename = mysql_result($get_info, 0, filename);
+  $fullpath = "../storage/originals/".$filename;
+  unlink($fullpath);
+  $update = mysql_query("UPDATE images SET status = 'removed', filename = 'removed.jpg' WHERE id = ".$_GET['no']." LIMIT 1");
+}
+
+// get total
+$get_total = mysql_query("SELECT COUNT(id) AS total FROM images WHERE status = 'new'");
+$total_pen = mysql_result($get_total, 0, total);
+
+?>
+
+<table width="100%" cellpadding="10" cellspacing="0"><tr><td valign="top">
+
+Use the following page to browse all items awaiting approval. (currently <b><?php echo $total_pen; ?> item<?php if($total_pen != 1) echo "s"; ?></b> pending). Any inappropriate items should be removed immediately from the system:<br><br>
+
+<?php
+// get recent
+$tracker = 0;
+$get_recent = mysql_query("SELECT id, dateadded, filesize, originalheight, originalwidth FROM images WHERE status = 'new' ORDER BY dateadded DESC LIMIT 30");
+if($get_recent) {
+  if(mysql_numrows($get_recent) > 0) {
+    echo '<table width="100%" cellpadding="3" cellspacing="0">';
+    while($row = mysql_fetch_array($get_recent)) {
+	  if($tracker == 0) echo "<tr>";
+	  echo "<td valign='top' align='center'>";
+	  echo "<a href='index.html?yesadult=".$row[id]."'>APPROVE ADULT</a><br>";
+	  echo "<a href='index.html?yespub=".$row[id]."'>APPROVE PUBLIC</a><br>";
+	  echo "<a href='index.html?yespri=".$row[id]."'>APPROVE NON-PUBLIC</a><br>";
+	  echo "<a href='index.html?no=".$row[id]."'>REMOVE</a>";
+	  echo "<br>";
+	  echo "<a href='../view-pic.html?img=".$row[id]."'><img src='../view-image.html?img=".$row[id]."&w=110&h=110' border='0' width='110' alt='".$site_url." - click here to view this image' style='border:1px solid #cccccc;'></a>";
+	  echo "</td>";
+	  if($tracker == 4) {
+	    $tracker = 0;
+		echo "</tr>";
+	  }
+	  else $tracker++;
+	}
+	echo '</table>';
+  }
+  else echo "<b>There are no items awaiting approval.</b>";
+}
+else echo "<b>There are no items awaiting approval.</b>";
+
+?>
+
+</td></tr></table>
+<?php
+include("../footer.php");
+?>

@@ -1,0 +1,61 @@
+<?php
+include_once("config.php");
+include_once("function-library.php");
+
+$ptitle   = "Free Image Hosting";
+$pkeys    = "image hosting, free image host, image host, img host, upload picture";
+$pdesc    = "Fast & Free Image Hosting";
+$selected = "CONTACT";
+
+$showform = TRUE;
+
+if(isset($sendit)) {
+	$errorstring = "";
+	$youremail = strtolower(preparedata($youremail));
+	if(strlen($youremail) == 0) $errorstring .="You must specify your email.<br>";
+	if(strlen($subject) == 0) $errorstring .="You must specify a subject.<br>";
+	if(strlen($message) == 0) $errorstring .="You have not entered a message.<br>";
+	if(strlen($youremail) < 9 || strlen($youremail) > 64) $errorstring .= "Please enter a valid email address.<br>";
+	else
+	{
+		$emailtail = strstr($youremail, '@');
+		if(!strstr($youremail, '@') || !strstr($emailtail, '.')) $errorstring .= "Please enter a valid email address.<br>";
+	}
+	if(strlen($errorstring) == 0){
+		$subject = "Contact from the ".$site_url." site - ".$subject;
+		$sent = mail($site_admin, $subject, $message, "FROM: ".$youremail);
+		if($sent) $showform = FALSE;
+	}
+}
+
+include("header.php");
+?>
+
+<table width="100%" cellpadding="10" cellspacing="0"><tr><td valign="top">
+
+  <?php
+    if($showform == TRUE) {
+  ?>
+  If you have any questions or comments about the site or services we offer, feel free to contact us using the form below:<br><br>
+<table width="100%" cellpadding="0" cellspacing="0" border="0" align="center">
+  <tr><form method="post" action="contact.html"><input type="hidden" name="sendit" value="yes"><td style="padding:0px;" align="left"><br>
+	<?php if(strlen($errorstring) > 0) echo "<table cellpadding=\"8\" cellspacing=\"0\" border=\"0\" align=\"center\"><tr><td><font class=\"error\"><b>Error(s) Found:</b><br><br>$errorstring</td></tr></table><br><br>";?>
+	<table cellpadding="5" cellspacing="0" border="0">
+	<tr><td width="80"><b>Your Email:</b></td><td><input type="text" name="youremail" class="form" style="width:150px;" value="<?php echo stripslashes($youremail); ?>"></td></tr>
+	  <tr><td><b>Subject:</b></td><td><input type="text" name="subject" class="form" style="width:150px;" value="<?php echo stripslashes($subject); ?>"></td></tr>
+	  <tr><td valign="top"><b>Message:</b></td><td><textarea name="message" class="form" style="width:300px;" rows="6"><?php echo stripslashes($message); ?></textarea></td></tr>
+	  <tr><td></td><td><input type="submit" value="send" class="form">&nbsp;&nbsp;<input type="reset" value="reset" class="form"></td></tr>
+	  <tr><td colspan="2" align="right"></td></tr>
+	</table><br>
+  </td></form></tr>
+</table>
+<?php 
+}
+else echo "<b>Your message has been sent to ".$site_name.". We will endeavour to respond within the next 48 hours.<br><br>Thanks for your comments,<br>".$site_url."</b><br><br>";
+?>
+
+</td></tr></table>
+
+<?php
+include("footer.php");
+?>

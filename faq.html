@@ -1,0 +1,42 @@
+<?php
+include_once("config.php");
+include_once("function-library.php");
+
+$ptitle   = "Free Image Hosting";
+$pkeys    = "image hosting, free image host, image host, img host, upload picture";
+$pdesc    = "Fast & Free Image Hosting";
+$selected = "FAQ";
+
+include("header.php");
+?>
+
+<table width="100%" cellpadding="10" cellspacing="0"><tr><td valign="top">
+
+<b>Is this free? </b><br>
+Yes 100% Free for all users.<br><br>
+
+<b>Will my images be removed? </b><br>
+Images not accessed within <?php echo $days_to_keep_images; ?> days will be removed.<br><br>
+
+<b>How many images can I upload?</b><br>
+You can upload as many images as you want, as long as each one adheres to the Terms of Service.<br><br>
+
+<b>Which image types am I allowed to upload?</b><br>
+You may upload .jpg, .jpeg, .gif (non animated) and .png image types.<br><br>
+
+<b>Are there any restrictions to the size of my uploaded images?</b><br>
+Each image you upload must be less than <?php echo $max_upload_display_size; ?> in size. If it is greater than that amount, your image will be rejected.<br><br>
+
+<b>Can I edit my images using <?php echo $site_name; ?>?</b><br>
+No. Most people use graphics editing programs such as PhotoShop or Paint Shop Pro, or software that comes with printers, scanners, or digital cameras to edit their images.<br><br>
+
+<b>Can I upload music or videos?</b><br>
+No. Music hosting is not allowed due to copyright concerns. Video hosting is not allowed due to large file sizes.<br><br>
+
+<b>How much space can I use?</b><br>
+You have an unlimited amount of space for storing your images. <?php echo $site_name; ?> continuously buys harddrives to compensate for the amount of images that <?php echo $site_name; ?>'s visitors upload.
+
+</td></tr></table>
+<?php
+include("footer.php");
+?>

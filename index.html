@@ -1,0 +1,199 @@
+<?php
+include_once("config.php");
+include_once("function-library.php");
+
+$ptitle   = "Free Image Hosting @ ".$site_name;
+$pkeys    = "image site, image hosting, free image host, image host, img host, upload picture, adult image hosting";
+$pdesc    = "Fast & Free Image Hosting for everyone. 3 step upload and simple instructions for uploading your images.";
+$selected = "HOME";
+
+if($default_upload_view == "MULTIPLE") {
+	$full_ref = $_SERVER["HTTP_REFERER"];
+	$root_ref = str_replace(array("http://www.", "https://www.", "http://", "www."), "", $full_ref);
+	
+	if(!strstr($root_ref, $site_url)) {
+		header("Location: index-multi-upload.html");
+		exit;
+		die();
+	}
+}
+
+include_once("header.php");
+?>
+
+<SCRIPT LANGUAGE="JavaScript">
+function copyit(theField) {
+	var tempval=eval("document."+theField)
+	tempval.focus()
+	tempval.select()
+	therange=tempval.createTextRange()
+	therange.execCommand("Copy")
+}
+</script>
+
+<?php
+if($_POST['submitme']) {
+
+  echo '<table width="100%" cellpadding="0" cellspacing="0"><form name="codeform"><tr><td width="70%" valign="top" style="padding:10px;">';
+
+  // validation bits
+  $filesize    = $_FILES['imgfile']['size'];
+  $tmpfile     = $_FILES['imgfile']['tmp_name'];
+  $filename    = $_FILES['imgfile']['name'];
+  $contenttype = $_FILES['imgfile']['type'];
+  $extension   = pathinfo($_FILES['imgfile']['name']);
+  $extension   = strtolower($extension[extension]);
+  
+  if($filesize == 0) $error .= "Please specify an image file to upload.<br>";
+  else {
+
+	  $valid_mime_types = array('image/jpeg', 'image/pjpeg', 'image/gif', 'image/png', 'image/x-png');
+	  if(!in_array($contenttype, $valid_mime_types)) {
+	    $error .= "File type does not appear to be a supported image (".$contenttype."). Please try another format.<br>";
+	  }
+	  if($filesize > $max_upload_size) $error .= "Uploaded file is greater than the maximum filesize. (".$max_upload_display_size.")<br>";
+  
+  }
+  
+  if(strlen($error) > 0) echo "<b>ERROR:</b><br><br>".$error."<br><br><a href='index.html'>back</a>";
+  else {
+
+    $uploaddir        = 'storage/originals/';
+    $newfilename      = randomfilename() . "." . $extension;
+	
+    $uploadfile = $uploaddir . $newfilename;
+	
+    if (!move_uploaded_file($_FILES['imgfile']['tmp_name'], $uploadfile)) {
+	  $error .= "Could not upload file, please try again later.<br>";
+	}
+	else {
+	  // add to db
+	  $userip = $_SERVER['REMOTE_ADDR']; 
+	  list($originalwidth, $originalheight, $type, $attr) = getimagesize($uploadfile);
+	  
+	  // check for refreshes
+	  $check_image    = "SELECT id FROM images WHERE mimetype = '".preparedata($contenttype)."' AND originalfilename = '".preparedata($filename)."' AND filesize = '".preparedata($filesize)."' AND description='".preparedata($imgdesc)."' AND originalip='".preparedata($userip)."' AND originalwidth='".$originalwidth."' AND originalheight='".$originalheight."' LIMIT 1";
+	  $do_check_image = @mysql_query($check_image);
+	  if($do_check_image) {
+	    if(mysql_numrows($do_check_image) > 0) {
+		  $error .= "It looks like you've already added this image, please go back and upload a different one.<br>";
+		  unlink($uploadfile);
+		}
+	  }
+	  
+	  if(strlen($error) > 0) echo "<b>ERROR:</b><br><br>".$error."<br><br><a href='index.html'>back</a>";
+	  else {
+	  
+	  $tracker = randomfilename();
+	  
+	  $insert_image    = "INSERT INTO images (dateadded, mimetype, originalfilename, filename, filesize, description, originalip, originalwidth, originalheight, lastaccessed, tracker) VALUES (NOW(), '".preparedata($contenttype)."', '".preparedata($filename)."', '".preparedata($newfilename)."', '".preparedata($filesize)."', '".preparedata($imgdesc)."', '".preparedata($userip)."', '".$originalwidth."', '".$originalheight."', NOW(), '".preparedata($tracker)."')";
+	  $do_insert_image = @mysql_query($insert_image);
+	  $item_id = mysql_insert_id();
+	  
+	  if(!$do_insert_image) $error .= "Can not update the database, please try again later or contact support.";
+	  else {
+	  
+		$originalfilename = $filename;
+	  
+	    echo "<b>CONGRATULATIONS!</b><br><br>";
+		echo "Your image has now been uploaded to ".$site_name." and is ready for linking. Use any of the following code snippets to display the image within your preferred location:<br><br>";
+		
+		echo "<b>Forum code:</b> (<a href=\"javascript:copyit('codeform.code1');\">copy code</a>)<br>";
+		echo "<textarea readonly name='code1' style='width:550px;height:40px;font-size:11px;color:#999999;' onClick=\"javascript:copyit('codeform.code1');\">[URL=http://".$site_url."/showpic-".$item_id."/".createhtmlname($originalfilename)."][IMG]http://".$site_url."/thumb-".$item_id.".jpg[/IMG][/URL]</textarea><br><br>";
+		
+		echo "<b>Share this image with friends:</b> (<a href=\"javascript:copyit('codeform.code2');\">copy code</a>)<br>";
+		echo "<textarea readonly name='code2' style='width:550px;height:40px;font-size:11px;color:#999999;' onClick=\"javascript:copyit('codeform.code2');\">http://".$site_url."/showpic-".$item_id."/".createhtmlname($originalfilename)."</textarea><br><br>";
+		
+		echo "<b>HTML code for your websites WITH thumbnail:</b> (<a href=\"javascript:copyit('codeform.code3');\">copy code</a>)<br>";
+		echo "<textarea readonly name='code3' style='width:550px;height:40px;font-size:11px;color:#999999;' onClick=\"javascript:copyit('codeform.code3');\"><a href=\"http://".$site_url."/showpic-".$item_id."/".createhtmlname($originalfilename)."\"><img src=\"http://".$site_url."/thumb-".$item_id.".jpg\" border=\"0\" alt=\"".$site_url." - click to view full image\"></a></textarea><br><br>";
+		
+		echo "<b>HTML code for your websites WITHOUT thumbnail:</b> (<a href=\"javascript:copyit('codeform.code4');\">copy code</a>)<br>";
+		echo "<textarea readonly name='code4' style='width:550px;height:40px;font-size:11px;color:#999999;' onClick=\"javascript:copyit('codeform.code4');\"><a href=\"http://".$site_url."/showpic-".$item_id."/".createhtmlname($originalfilename)."\">view image</a></textarea><br><br>";
+		
+		if($show_delete_code) {
+		  echo "<b>Delete Image Link:</b><br>Use this link to remove your image at any time.<br>";
+		  echo " - <a href='http://".$site_url."/delete.html?d=".$tracker."'>http://".$site_url."/delete.html?d=".$tracker."</a><br><br>";
+		}
+		
+		if($show_pass_option) {
+		  echo "<iframe src='set-pass.php?im=".$item_id."' frameborder='no' scrolling='no' width='400'></iframe>";
+		}
+		
+		echo "</td><td valign='top' align='center'><br><br><br>Thumbnail:<br><br>";
+		
+		echo "<a href='showpic-".$item_id."/".createhtmlname($originalfilename)."'><img src='view-image.html?img=".$item_id."&w=160&h=160' border='0' width='160' alt='".$site_url." - click here to view this image' style='border:1px solid #cccccc;'></a>";
+		
+		echo "<br><br>";
+		
+		// recent images
+		$get_recent = @mysql_query("SELECT id, dateadded, originalfilename, filesize FROM images WHERE originalip = '".$userip."' ORDER BY id DESC LIMIT 8");
+		if($get_recent) {
+		  if(mysql_numrows($get_recent) > 0) {
+		    echo "Your Recent Uploads:<br><br>";
+		    while($row = mysql_fetch_array($get_recent)) {
+			  $filesize = number_format($row[filesize]/1024, 1);
+			  if($filesize > 1000) $filesize = number_format($filesize/1024, 1)."mb";
+			  else $filesize = $filesize."kb";
+			  if(strlen($row[originalfilename]) > 18) $originalfile = substr($row[originalfilename], 0, 18)."...";
+			  else $originalfile = $row[originalfilename];
+			  echo "<a href='showpic-".$row[id]."/".createhtmlname($row[originalfilename])."'>".$row[originalfilename]." (".$filesize.")</a><br>";
+			}
+		  }
+		  echo "<br>";
+		}
+	  
+	  }
+	 }
+	}
+
+  }
+  
+  echo '</td></tr></form></table>';
+  
+}
+else {
+?>
+
+
+<table width="100%" cellpadding="0" cellspacing="0">
+<tr>
+<td width="70%" valign="top" style="padding:10px;">
+
+Use the form below to upload your image to <?php echo $site_url; ?>. <a href="index-multi-upload.html">Multiple file uploader tool here</a>. Please note the following before uploading:<br><br>
+<ul>
+<li><b>File Types:</b> jpg, gif, png.
+<li><b>Max File Size:</b> <?php echo $max_upload_display_size; ?>.
+<li><b>No</b> copyrighted images/artwork.
+<li>By uploading you are agreeing to the Terms of Service.
+</ul><br style="line-height: 6px;">
+<table width="100%" cellpadding="10" cellspacing="0" style="border:1px solid #CCCCCC;">
+<form method="POST" action="index.html" enctype='multipart/form-data'>
+<tr>
+<td width="100%" valign="top" bgcolor="#EAEAEA">
+<b>1. Select your image:</b>&nbsp;(max <?php echo $max_upload_display_size; ?>. jpg, gif, png)<br><br style="line-height: 4px;">
+<input type="file" name="imgfile" style="width:435px;"><br><br style="line-height: 6px;">
+<b>2. Enter a description:</b>&nbsp;(optional)<br><br style="line-height: 4px;">
+<textarea name="imgdesc" style="width:240px; height:41px;"></textarea><br><br style="line-height: 6px;">
+<b>3. Upload now:</b><br><br style="line-height: 4px;">
+<input name="submitme" type="hidden" value="1">
+<input name="submit" type="submit" value="upload image"> or use the <a href="index-multi-upload.html">Multiple Image Uploader Tool</a>.
+</td>
+</tr>
+</form>
+</table>
+
+</td>
+<td width="30%" valign="top" align="right">
+<img src="images/main-bg.jpg" alt="free image hosting site" width="261" height="326">
+
+</td>
+</tr>
+</table>
+
+<?php
+}
+?>
+
+<?php
+include("footer.php");
+?>

@@ -1,0 +1,16 @@
+<?php
+include_once("config.php");
+include_once("function-library.php");
+include_once("gallery_img_handler.php");
+
+if(!$img) die();
+else {
+  if(!w) $w = 160;
+  if($w > 500) $w = 500;
+  $image = previewImage($img, $w);
+  
+  header("Content-type: image/jpg");
+  $done = file_get_contents($image['targetImagePath']);
+  echo $done;
+}
+?>

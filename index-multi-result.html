@@ -1,0 +1,101 @@
+<?php
+include_once("config.php");
+include_once("function-library.php");
+
+$ptitle   = "Free Image Hosting @ ".$site_name;
+$pkeys    = "image site, image hosting, free image host, image host, img host, upload picture, adult image hosting";
+$pdesc    = "Fast & Free Image Hosting for everyone. 3 step upload and simple instructions for uploading your images.";
+$selected = "HOME";
+
+include_once("header.php");
+?>
+
+<script type="text/javascript" src="js/animatedcollapse.js"></script>
+
+<SCRIPT LANGUAGE="JavaScript">
+function copyit(theField) {
+	var tempval=eval("document."+theField)
+	tempval.focus()
+	tempval.select()
+	therange=tempval.createTextRange()
+	therange.execCommand("Copy")
+}
+</script>
+
+<?php
+if($_GET['mutracker']) {
+
+  $get_uploads = mysql_query("SELECT id, dateadded, tracker, originalip, originalfilename FROM images WHERE mutracker = '".preparedata($_GET['mutracker'])."'");
+  if(mysql_numrows($get_uploads) > 0) {
+		echo '<table width="100%" cellpadding="0" cellspacing="0"><tr><td width="70%" valign="top" style="padding:10px;">';
+			  
+		echo "<b>CONGRATULATIONS!</b><br><br>";
+		echo "Your image(s) have now been uploaded to ".$site_name." and are ready for linking. Use any of the following code snippets to display the image(s) within your preferred location.<br><br>";
+		
+		echo "Click on any filename below to view the code:<br><br>";
+		
+		$i = 0;
+
+		while($row = mysql_fetch_array($get_uploads)) {
+		
+			$item_id = $row[id];
+			$tracker = $row[tracker];
+			$originalfilename = $row[originalfilename];
+			
+			$this_code = "";
+			
+			$this_code .= '<table width="695" cellpadding="0" cellspacing="0"><form name="codeform'.$i.'"><tr><td width="100%" valign="top">';
+			
+			$this_code .= "<b>Forum code:</b> (<a href=\"javascript:copyit('codeform".$i.".code1');\">copy code</a>)<br>";
+			$this_code .= "<textarea readonly name='code1' style='width:550px;height:40px;font-size:11px;color:#999999;' onClick=\"javascript:copyit('codeform".$i.".code1');\">[URL=http://".$site_url."/showpic-".$item_id."/".createhtmlname($originalfilename)."][IMG]http://".$site_url."/thumb-".$item_id.".jpg[/IMG][/URL]</textarea><br><br>";
+			
+			$this_code .= "<b>Share this image with friends:</b> (<a href=\"javascript:copyit('codeform".$i.".code2');\">copy code</a>)<br>";
+			$this_code .= "<textarea readonly name='code2' style='width:550px;height:40px;font-size:11px;color:#999999;' onClick=\"javascript:copyit('codeform".$i.".code2');\">http://".$site_url."/showpic-".$item_id."/".createhtmlname($originalfilename)."</textarea><br><br>";
+			
+			$this_code .= "<b>HTML code for your websites WITH thumbnail:</b> (<a href=\"javascript:copyit('codeform".$i.".code3');\">copy code</a>)<br>";
+			$this_code .= "<textarea readonly name='code3' style='width:550px;height:40px;font-size:11px;color:#999999;' onClick=\"javascript:copyit('codeform".$i.".code3');\"><a href=\"http://".$site_url."/showpic-".$item_id."/".createhtmlname($originalfilename)."\"><img src=\"http://".$site_url."/thumb-".$item_id.".jpg\" border=\"0\" alt=\"".$site_url." - click to view full image\"></a></textarea><br><br>";
+			
+			$this_code .= "<b>HTML code for your websites WITHOUT thumbnail:</b> (<a href=\"javascript:copyit('codeform".$i.".code4');\">copy code</a>)<br>";
+			$this_code .= "<textarea readonly name='code4' style='width:550px;height:40px;font-size:11px;color:#999999;' onClick=\"javascript:copyit('codeform".$i.".code4');\"><a href=\"http://".$site_url."/showpic-".$item_id."/".createhtmlname($originalfilename)."\">view image</a></textarea><br><br>";
+			
+			if($show_delete_code) {
+			  $this_code .= "<b>Delete Image Link:</b><br>Use this link to remove your image at any time.<br>";
+			  $this_code .= " - <a href='http://".$site_url."/delete.html?d=".$tracker."'>http://".$site_url."/delete.html?d=".$tracker."</a><br><br>";
+			}
+			
+			if($show_pass_option) {
+			  $this_code .= "<iframe src='set-pass.php?im=".$item_id."' frameborder='no' scrolling='no' width='400' allowtransparency='true'></iframe>";
+			}
+			
+			$this_code .= "</td><td valign='top' align='center'><br><br><br>Thumbnail:<br><br>";
+			
+			$this_code .= "<a href='showpic-".$item_id."/".createhtmlname($originalfilename)."'><img src='view-image.html?img=".$item_id."&w=130&h=130' border='0' width='130' alt='".$site_url." - click here to view this image' style='border:1px solid #cccccc;'></a>";
+			
+			$this_code .= "<br><br>";
+			
+			$this_code .= '</td></tr></form></table>';
+			//$this_code = "content";
+			// show html
+			echo '- <a href="javascript:collapse'.$i.'.slideit()">'.$row['originalfilename']."</a><br>";
+			echo '<div id="cat'.$i.'" style="width: 710px; background-color: #EAF0F8; margin-left:9px;margin-top:5px;margin-bottom:5px;"><div style="padding: 7px; border-top:1px solid #D1DFEF; border-bottom:1px solid #D1DFEF;">'.$this_code.'</div></div>';
+			echo '<script type="text/javascript">var collapse'.$i.'=new animatedcollapse("cat'.$i.'", 710, true)</script>';
+			$i++;
+			
+		}
+		
+		echo '</td></tr></table>';
+		
+	}
+	else echo "<br>There was a problem with your upload. It could be that you have already uploaded the submitted images or that they have not passed the validation process.<br><br>Please try again or contact support.";
+  
+  
+  
+}
+else {
+	echo "There was a problem with your upload, please try again.";
+}
+?>
+
+<?php
+include("footer.php");
+?>

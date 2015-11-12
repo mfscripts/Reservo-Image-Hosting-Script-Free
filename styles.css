@@ -1,0 +1,77 @@
+input, textarea, select {
+  border-style:solid;
+  border-width:1px;
+  border-color:#666666;
+  font-size:13px;
+  color:#000000;
+}
+a {
+	font-size: 11px;
+	text-decoration: underline;
+	color:#A392B4;
+}
+a:hover {
+	font-size: 11px;
+	text-decoration: none;
+	color:#A392B4;
+}
+.nav {
+	font-size: 10px;
+	text-decoration: none;
+	color:#A392B4;
+}
+.nava {
+	font-size: 10px;
+	text-decoration: underline;
+	color:#A392B4;
+}
+.nava:hover {
+	font-size: 10px;
+	text-decoration: none;
+	color:#A392B4;
+}
+body,td,th {
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 11px;
+	color:#453159;
+}
+.headerfont {
+	font-family: Arial, Verdana, Helvetica, sans-serif;
+	font-size: 14px;
+	text-decoration: none;
+	color:#453159;
+	font-weight:bold;
+}
+.headera {
+	font-family: Arial, Verdana, Helvetica, sans-serif;
+	font-size: 14px;
+	text-decoration: none;
+	color:#453159;
+	font-weight:bold;
+}
+.headera:hover {
+	font-family: Arial, Verdana, Helvetica, sans-serif;
+	font-size: 14px;
+	text-decoration: underline;
+	color:#453159;
+	font-weight:bold;
+}
+
+
+.small {
+	font-family: Tahoma, Verdana, Arial, Helvetica, sans-serif; font-size: 9px;color: #FFFFFF;
+}
+.smalla {
+	font-family: Tahoma, Verdana, Arial, Helvetica, sans-serif; font-size: 9px;color: #FFFFFF;text-decoration: underline;
+}
+.smalla:hover {
+	font-family: Tahoma, Verdana, Arial, Helvetica, sans-serif; font-size: 9px;	color:#FFFFFF;text-decoration: none;
+}
+.form {
+  border-style:solid;
+  border-width:1px;
+  border-color:#666666;
+  background-color:#ffffff;
+  font-size:11px;
+  color:#000000;
+}

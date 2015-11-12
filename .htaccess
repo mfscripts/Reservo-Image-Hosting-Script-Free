@@ -1,0 +1,7 @@
+AddType application/x-httpd-php .html
+php_flag register_globals on
+RewriteEngine on
+RewriteRule ^thumb-(.*).jpg$ view-image.html?img=$1&w=160&h=160 [QSA]
+RewriteRule ^showpic-(.*)/(.*)$ view-pic.html?img=$1 [QSA]
+RewriteRule ^download-(.*)/(.*)$ view-pic-original.html?img=$1&dl=1 [QSA]
+RewriteRule ^showoriginal-(.*)/(.*)$ view-pic-original.html?img=$1 [QSA]

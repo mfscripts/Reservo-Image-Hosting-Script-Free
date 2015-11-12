@@ -1,0 +1,83 @@
+<?php
+include_once("config.php");
+include_once("function-library.php");
+include_once("gallery_img_handler.php");
+
+if(!$img) {
+	$ptitle   = "Free Image Hosting";
+	$pkeys    = "image hosting, free image host, image host, img host, upload picture";
+	$pdesc    = "Fast & Free Image Hosting";
+	$selected = "VIEWPIC";
+	include_once("header.php");
+	  echo "<b>ERROR: IMAGE NOT FOUND!</b>";
+	include("footer.php");
+}
+else {
+
+  // load image data
+  if(!$w) $w = 720;
+  if($w > 2000) $w = 2000;
+  if($w) $image = previewImage($img, $w);
+  else $image = previewImage($img);
+  $done = file_get_contents($image['targetImagePath']);
+
+  if(strlen($image['password']) > 0) {
+	  if($_POST['p'] != $image['password']) {
+	    // redirect to adult confirmation page
+		header("Location: http://".$site_url."/enter-password.html?img=".$img);
+		die();
+		exit;
+	  }
+  }
+  elseif($image['status'] == "adult") {
+	  if(!$_POST['adult']) {
+	    // redirect to adult confirmation page
+		header("Location: http://".$site_url."/adult-warning.html?img=".$img);
+		die();
+		exit;
+	  }
+  }
+
+  $ptitle   = "Free Image Hosting";
+  $pkeys    = "image hosting, free image host, image host, img host, upload picture";
+  $pdesc    = "Fast & Free Image Hosting";
+  $selected = "VIEWPIC";
+  
+  include_once("header.php");
+  
+  echo '<table width="100%" cellpadding="0" cellspacing="0"><tr><td valign="top" style="padding:10px;" align="center">';
+  
+  // ads
+  if($image['status'] == "adult") {
+    // display adult advertising here
+  }
+  else {
+    // display non-adult advertising here
+  }
+  
+  echo '<a href="http://'.$site_url.'/showoriginal-'.$img.'/'.createhtmlname($image[originalfilename]).'"><img src="http://'.$site_url.'/view-pic-img.html?img='.$img.'&w='.$w.'" width="'.$image[width].'" height="'.$image[height].'" alt="'.$image[description].'" border="0"></a>';
+  echo "<br><br>";
+  
+  $newviews = $image[totalviews]+1;
+  echo "File Name: ".$image[originalfilename]."<br><br>";
+  echo "Date Added:&nbsp;".$image[dateadded]." | Original Filesize:&nbsp;".$image[filesize]." | Views:&nbsp;".$newviews;
+  if(strlen($image[description]) > 0) echo "<br><br>Comments:&nbsp;".$image[description];
+  echo "<br><br><a href='http://".$site_url."/showoriginal-".$img."/".createhtmlname($image[originalfilename])."'>view original</a> | <a href='http://".$site_url."/download-".$img."/".createhtmlname($image[originalfilename])."'>download</a>";
+  
+  // ads
+  if($image['status'] == "adult") {
+    // display adult advertising here
+  }
+  else {
+    // display non-adult advertising here
+  }
+  
+  echo '</td></tr></table>';
+  
+  // update views
+  $update_views = mysql_query("UPDATE images SET totalviews = ".$newviews.", lastaccessed = NOW() WHERE id = ".$img." LIMIT 1");
+  
+  include("footer.php");
+  
+}
+?>
