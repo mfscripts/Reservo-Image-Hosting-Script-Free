@@ -3,7 +3,7 @@
 Reservo - Image Hosting Script Free
 
 <h2>About Reservo - Image Hosting Script Free</h2>
-Reservo - Image Hostitng Script Free is the initial version of the premium image sharing script Reservo available at <a href="https://reservo.co/">Reservo.co</a>.
+Reservo - Image Hosting Script Free is the initial version of the premium image sharing script Reservo available at <a href="https://reservo.co/">Reservo.co</a>.
 
 This is a community based release that is supplied without support or liability. You are free to use the image sharing script as you wish. The only restriction to this PHP script is that this README file must not be edited or deleted. 
 
