@@ -8,28 +8,28 @@ Reservo - Image Hostitng Script Free is the original version of the premium imag
 This is a community based release that is supplied without support or liability. You are free to use the image sharing script as you wish. The only restriction to this PHP script is that this README file must not be edited or deleted. 
 
 <h2>Features:</h2>
-Multiple Uploader Tool now added.
-Upload progress indicator.
-Choose to use single or multi uploader as default via config.
-Option to protect images with a password once uploaded.
-Set watermark on every uploaded image, inc alpha and positioning.
-Unique delete link provided to the uploader to remove any images.
-New 'friendly' urls on image pages/image downloads.
-Written in php/mysql.
-All pages are created using Apaches mod-rewrite so any uploaded images all look like static pages within the search engines.
-Automatic generation of thumbnails along with 'copy & paste' code for the user.
-Automatic resize of images.
-Validation of duplicate content to stop same IP uploading same image multiple times.
-Basic admin area to approve/decline images. Images can also be approved as adult.
-Adult images display a warning message before user can view them.
-Total view for each image.
-Recent uploads page for public approved images.
-Date added, original filesize and description displayed on each image.
-Images which have not been viewed within 60 days (can be amended) are deleted.
-Hotlinking blocked by default.
-Max filesize, permit hotlinking and days to keep images can all be set via the config scripts.
-Basic design with original fireworks files included.
-Ability to display ads depending on whether an image is adult or not.
+- Multiple Uploader Tool now added.
+- Upload progress indicator.
+- Choose to use single or multi uploader as default via config.
+- Option to protect images with a password once uploaded.
+- Set watermark on every uploaded image, inc alpha and positioning.
+- Unique delete link provided to the uploader to remove any images.
+- New 'friendly' urls on image pages/image downloads.
+- Written in php/mysql.
+- All pages are created using Apaches mod-rewrite so any uploaded images all look like static pages within the search engines.
+- Automatic generation of thumbnails along with 'copy & paste' code for the user.
+- Automatic resize of images.
+- Validation of duplicate content to stop same IP uploading same image multiple times.
+- Basic admin area to approve/decline images. Images can also be approved as adult.
+- Adult images display a warning message before user can view them.
+- Total view for each image.
+- Recent uploads page for public approved images.
+- Date added, original filesize and description displayed on each image.
+- Images which have not been viewed within 60 days (can be amended) are deleted.
+- Hotlinking blocked by default.
+- Max filesize, permit hotlinking and days to keep images can all be set via the config scripts.
+- Basic design with original fireworks files included.
+- Ability to display ads depending on whether an image is adult or not.
 
 <h2>Requirements</h2>
 - php 4.x
