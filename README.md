@@ -1,6 +1,6 @@
 <h1>Reservo - Image Hosting Script Free</h1>
 
-Reservo - Image Hosting Script Free
+Setup and manage your own image sharing service with Reservo - Image Hosting Script Free.
 
 <h2>About Reservo - Image Hosting Script Free</h2>
 Reservo - Image Hosting Script Free is the initial version of the premium image sharing script Reservo available at <a href="https://reservo.co/">Reservo.co</a>.
