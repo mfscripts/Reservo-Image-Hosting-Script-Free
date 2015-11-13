@@ -15,3 +15,5 @@ Setup Instructions:
 You should now be set to go!
 
 NOTE: If you receiving an 'Internal Server Error' when you try and load the site, it's probably because you have phpsuexec installed. You can resolve this error by removing the line 'php_flag register_globals on' from the .htaccess file within the root.
+
+Check out https://reservo.co/ for other PHP image hosting scripts!
