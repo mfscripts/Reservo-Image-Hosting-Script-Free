@@ -20,7 +20,7 @@
   
 <tr>
   <td valign="bottom" width="10" height="60"><img src="<?php echo "http://".$site_url."/"; ?>images/bottom-left-main.jpg" width="10" height="10"></td>
-  <td align="center" class="small">Copyright &copy; <?php echo date("Y"); ?> <?php echo "<a href='http://".$site_url."'  class='smalla'>".$site_name."</a>"; ?> - Developed by <a href="http://www.arwscripts.com" class="smalla">ARW Scripts</a></td>
+  <td align="center" class="small">Copyright &copy; <?php echo date("Y"); ?> <?php echo "<a href='http://".$site_url."'  class='smalla'>".$site_name."</a>"; ?> - <a href="https://reservo.co" class="smalla">Image Hosting Script</a></td>
   <td valign="bottom" align="right"><img src="<?php echo "http://".$site_url."/"; ?>images/bottom-right-main.jpg" width="10" height="10"></td>
 </tr>
 </table></body>
